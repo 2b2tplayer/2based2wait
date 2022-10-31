@@ -11,7 +11,7 @@
  */
 {
 	"account": {
-		"username": "YOUR USERNAME"
+		"username": "ignamir245@gmail.com"
 	},
 
 	"proxy": {
@@ -20,13 +20,13 @@
 	},
 
 	"discord": {
-		"active": false,
+		"active": true,
 		"webhook": {
-			"spam": "YOUR DISCORD WEBHOOK",
-			"livechat": "YOUR DISCORD WEBHOOK",
-			"status": "YOUR DISCORD WEBHOOK"
+			"spam": "https://canary.discord.com/api/webhooks/1036635768208240650/ZmI71M6ES2FNWWdpq-GApRJHK1Q1k4h4PzgPgfmfqZCO6zMc5sPKGRDc-yWSD0s-CCCB",
+			"livechat": "https://canary.discord.com/api/webhooks/1036635489786146816/T6ZMbIzacnWtuGpapiRN3Bb5ijzc0IfYDmM0R13xMxYHnwa1RjVotaA1vR3fi3A-DrXo",
+			"status": "https://canary.discord.com/api/webhooks/1036636113013587968/GMRP8SbyTu_CVdeUjq1kk_zogkESzIoSu9vGGwfbznxVrol0oXih-KICm4mCttSbqvjU"
 		},
-		"id": "424701879151230977"
+		"id": "503338650596147201"
 	},
 
 	"queueThreshold": 21,
@@ -51,7 +51,7 @@
 		},
 		"antiAfk": {
 			"actions": [ "rotate", "swingArm" ],
-			"fishing": false,
+			"fishing": true,
 			"chatting": false,
 			"chatMessages": [ "!pt", "!queue" ],
 			"chatInterval": 690420
