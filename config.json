@@ -15,7 +15,7 @@
 	},
 
 	"proxy": {
-		"whitelist": [ "YOUR WHITELISTED PLAYERNAMES" ],
+		"whitelist": [ "2b2tquit", "AutistaPromedio" ],
 		"port": 25565
 	},
 
