@@ -20,9 +20,9 @@ const downloader = require("./util/downloader.js");
 // Global Vars
 // ===========
 
-var conn;
-var client;
-var server;
+let conn;
+let client;
+let server;
 
 // ==============
 // Initialization
@@ -34,7 +34,6 @@ if (config.experimental.maxThreadpool.active) {
 }
 
 // Start proxy
-restartUncleanDisconnectMonitor();
 start();
 
 // =================
@@ -69,7 +68,7 @@ function packetHandler(packetData, packetMeta) {
 	}
 
 	// Reset uncleanDisconnectMonitor timer
-	restartUncleanDisconnectMonitor();
+	refreshMonitor();
 }
 
 // =================
@@ -131,6 +130,10 @@ function createClient() {
 	// Log disconnect
 	client.on("disconnect", function (packet) {
 		logger.log("disconnected", packet.reason, "proxy");
+		notifier.sendWebhook({
+			title: "Disconnected from Server: " + packet.reason,
+			category: "spam"
+		});
 		if (JSON.parse(packet.reason).text === "You are already connected to this proxy!") { // Send notifications when the proxy is unable to log on because the account is already in use
 			notifier.sendWebhook({
 				title: "Someone is already connected to the server using this proxy's account.",
@@ -146,6 +149,10 @@ function createClient() {
 	// Log kick
 	client.on("kick_disconnect", function (packet) {
 		logger.log("kick/disconnect", packet.reason, "proxy");
+		notifier.sendWebhook({
+			title: "Kicked from Server: " + packet.reason,
+			category: "spam"
+		});
 		reconnect();
 	});
 
@@ -245,11 +252,13 @@ function createLocalServer() {
 						deleteOnRestart: true
 					});
 				}
-				// Disconnect if no controller
+				// Disconnect if no controller after config.experimental.disconnectIfNoController.delay seconds
 				if (config.experimental.disconnectIfNoController.active && status.inQueue === "false") {
 					setTimeout(function () {
-						logger.log("proxy", "Restarting proxy because noone was in control " + config.experimental.disconnectIfNoController.delay + " seconds after someone DCed from proxy while it was on the server.", "proxy");
-						reconnect();
+						if (status.controller === "None") {
+							logger.log("proxy", "Restarting proxy because noone was in control " + config.experimental.disconnectIfNoController.delay + " seconds after someone DCed from proxy while it was on the server.", "proxy");
+							reconnect();
+						}
 					}, config.experimental.disconnectIfNoController.delay * 1000);
 				}
 				// Start Mineflayer
@@ -314,14 +323,16 @@ function createLocalServer() {
 // ==========================
 
 // If no packets are received for config.uncleanDisconnectInterval seconds, assume we were disconnected uncleanly.
-var uncleanDisconnectMonitor;
-// Reset uncleanDisconnectMonitor timer
-function restartUncleanDisconnectMonitor() {
-	clearTimeout(uncleanDisconnectMonitor)
-	uncleanDisconnectMonitor = setTimeout(function () {
-		logger.log("proxy", "No packets were received for " + config.uncleanDisconnectInterval + " seconds. Assuming unclean disconnect.", "proxy");
-		reconnect();
-	}, config.uncleanDisconnectInterval * 1000);
+let uncleanDisconnectMonitor;
+function refreshMonitor() {
+	if (!uncleanDisconnectMonitor) { // Create timer on the first packet
+		uncleanDisconnectMonitor = setTimeout(function () {
+			logger.log("proxy", "No packets were received for " + config.uncleanDisconnectInterval + " seconds. Assuming unclean disconnect.", "proxy");
+			reconnect();
+		}, config.uncleanDisconnectInterval * 1000);
+		return;
+	}
+	uncleanDisconnectMonitor.refresh(); // Restart the timer
 }
 
 // =========

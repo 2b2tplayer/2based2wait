@@ -1,6 +1,6 @@
 {
   "name": "2based2wait",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Private & lightweight 2b2t proxy.",
   "main": "proxy.js",
   "scripts": {
@@ -14,13 +14,13 @@
   "author": "Enchoseon",
   "license": "GPL-2.0",
   "dependencies": {
-    "@rob9315/mcproxy": "^0.3.1",
+    "@rob9315/mcproxy": "^1.0.0",
     "deepmerge": "^4.2.2",
     "joi": "^17.6.0",
     "json5": "^2.2.1",
     "minecraft-protocol": "^1.35.0",
     "mineflayer-antiafk": "github:Etiaro/mineflayer-antiafk",
-    "mineflayer-auto-eat": "^2.3.3",
+    "mineflayer-auto-eat": "^3.3.0",
     "ngrok": "^4.3.1",
     "node-fetch": "^2.6.7",
     "node-notifier": "^10.0.1",
